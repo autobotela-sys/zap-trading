@@ -1,0 +1,142 @@
+========================================
+RAILWAY DEPLOYMENT - EXACT STEPS
+========================================
+
+I'VE ALREADY DONE:
+✅ Fixed all code bugs
+✅ Created proper Docker configuration
+✅ Added .dockerignore file
+✅ Configured Railway build settings
+✅ Pushed everything to GitHub
+
+NOW YOU NEED TO DO THESE EXACT STEPS:
+
+========================================
+STEP 1: Create Railway Service (1 min)
+========================================
+
+Railway should already be open in your browser.
+
+1. Click "Deploy from GitHub repo"
+2. Select: autobotela-sys/zap-trading
+3. CRITICAL: Find "Root Directory" field
+   - If you don't see it, click "Advanced" button
+   - You MUST see this field
+4. Type exactly: backend
+5. Click "Deploy Now"
+
+Wait for build to start (you'll see logs).
+
+========================================
+STEP 2: Add Databases (30 seconds)
+========================================
+
+In the same Railway project:
+
+1. Click "New Service" button
+2. Click "Database" → Click "PostgreSQL"
+3. Wait for green checkmark
+4. Click "New Service" button again
+5. Click "Database" → Click "Redis"
+6. Wait for green checkmark
+
+========================================
+STEP 3: Add Environment Variables
+========================================
+
+Click on your "backend" service:
+Go to "Variables" tab
+
+Add these 5 variables one by one:
+
+1. Name: JWT_SECRET
+   Value: ZapSecret2024ProductionKey
+
+2. Name: DEBUG
+   Value: False
+
+3. Name: ALLOWED_ORIGINS
+   Value: https://zap-trading.vercel.app
+
+4. Click on PostgreSQL service → Variables tab
+   Copy the DATABASE_URL
+   Go back to backend service → Variables
+   Add: Name: DATABASE_URL
+   Value: <paste>
+
+5. Click on Redis service → Variables tab
+   Copy the REDIS_URL
+   Go back to backend service → Variables
+   Add: Name: REDIS_URL
+   Value: <paste>
+
+========================================
+STEP 4: Deploy & Get URL
+========================================
+
+1. Click "Deploy" or "Restart" on backend service
+2. Wait for green checkmark (may take 2-3 minutes)
+3. Click "Settings" tab
+4. Scroll to "Domains" section
+5. Copy your backend URL
+   (looks like: https://zap-backend.up.railway.app)
+
+========================================
+STEP 5: Update Frontend
+========================================
+
+1. Go to https://vercel.com
+2. Open zap-trading project
+3. Settings → Environment Variables
+4. Find VITE_API_URL
+5. Paste your new Railway backend URL
+6. Save
+7. Click "Redeploy"
+
+========================================
+STEP 6: Test
+========================================
+
+1. Go to https://zap-trading.vercel.app
+2. Click "Register"
+3. Create account
+4. Login
+5. Add Zerodha account
+
+========================================
+TROUBLESHOOTING
+========================================
+
+BUILD FAILED?
+- Make sure Root Directory is set to "backend" (not blank, not "/")
+- Check the build logs for specific errors
+- Make sure you waited for GitHub to sync (may take 1-2 min)
+
+CAN'T CONNECT TO DATABASE?
+- Verify DATABASE_URL is copied correctly
+- Check PostgreSQL service is running (green dot)
+
+SERVICES OFFLINE?
+- Click on service → Click "Start" button
+- Wait 2-3 minutes for first deployment
+
+========================================
+IMPORTANT URLs
+========================================
+
+Railway: https://railway.app
+GitHub: https://github.com/autobotela-sys/zap-trading
+Frontend: https://zap-trading.vercel.app
+Vercel: https://vercel.com
+
+========================================
+NEED HELP?
+========================================
+
+Copy any error messages from Railway build logs and I'll fix them!
+
+Backend health check (after deployment):
+https://<your-backend-url>/health
+
+API docs:
+https://<your-backend-url>/docs

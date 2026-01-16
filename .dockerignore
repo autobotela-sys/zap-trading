@@ -1,0 +1,15 @@
+frontend
+.git
+README.md
+QUICKSTART.md
+DEPLOY.md
+GITHUB_TOKEN_GUIDE.md
+RAILWAY_SETUP_GUIDE.md
+QUICK_DEPLOY.txt
+deploy-*.bat
+deploy-*.ps1
+push-to-github.bat
+railway-deploy.bat
+railway-auto-setup.ps1
+*.md
+!backend/README.md
