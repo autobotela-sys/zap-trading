@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: zap-postgres
+    environment:
+      POSTGRES_USER: zap_user
+      POSTGRES_PASSWORD: zap_password
+      POSTGRES_DB: zap_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: zap-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build: ./backend
+    container_name: zap-backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://zap_user:zap_password@postgres:5432/zap_db
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: local-dev-secret-key-change-in-production
+      DEBUG: "True"
+      ALLOWED_ORIGINS: http://localhost:3000
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    container_name: zap-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:8000
+
+volumes:
+  postgres_data:
+  redis_data:
