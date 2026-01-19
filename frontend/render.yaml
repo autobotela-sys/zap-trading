@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: zap-trading-frontend
+    env: static
+    buildCommand: npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
