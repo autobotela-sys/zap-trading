@@ -1,0 +1,228 @@
+╔══════════════════════════════════════════════════════════════════╗
+║          🚀 RAILWAY DEPLOYMENT GUIDE - STEP BY STEP             ║
+╚══════════════════════════════════════════════════════════════════╝
+
+All code has been pushed to GitHub: https://github.com/autobotela-sys/zap-trading
+
+Follow these steps to deploy to Railway:
+
+══════════════════════════════════════════════════════════════════
+
+STEP 1: Open Railway Dashboard
+--------------------------------
+1. Go to: https://railway.app/
+2. Login with your GitHub account (autobotela@gmail.com)
+
+══════════════════════════════════════════════════════════════════
+
+STEP 2: Create New Project from GitHub
+----------------------------------------
+1. Click "New Project" button
+2. Select "Deploy from GitHub repo"
+3. Find and select: autobotela-sys/zap-trading
+4. Click "Import"
+
+══════════════════════════════════════════════════════════════════
+
+STEP 3: Configure Backend Service
+-----------------------------------
+Railway will auto-detect the backend folder.
+
+1. Click on the Backend service
+2. Settings:
+   - Name: Backend
+   - Root Directory: backend
+   - Build Command: (leave empty - auto-detected)
+   - Start Command: uvicorn main:app --host 0.0.0.0 --port $PORT
+
+3. Environment Variables (Click "Variables" tab):
+   ```
+   DATABASE_URL         = (will be auto-linked)
+   REDIS_URL            = (will be auto-linked)
+   JWT_SECRET           = prod-secret-key-change-this-$(openssl rand -hex 32)
+   ALLOWED_ORIGINS      = https://zap-trading.up.railway.app,https://<your-frontend-url>.railway.app
+   ```
+
+4. Click "Deploy"
+
+══════════════════════════════════════════════════════════════════
+
+STEP 4: Add PostgreSQL Service
+--------------------------------
+1. In your project, click "New Service"
+2. Select "Database"
+3. Select "PostgreSQL"
+4. Click "Add PostgreSQL"
+5. Railway will automatically create DATABASE_URL variable
+
+══════════════════════════════════════════════════════════════════
+
+STEP 5: Add Redis Service
+--------------------------
+1. Click "New Service" again
+2. Select "Database"
+3. Select "Redis"
+4. Click "Add Redis"
+5. Railway will automatically create REDIS_URL variable
+
+══════════════════════════════════════════════════════════════════
+
+STEP 6: Configure Frontend Service
+-----------------------------------
+1. Click "New Service"
+2. Select "Deploy from GitHub repo"
+3. Select: autobotela-sys/zap-trading
+4. Root Directory: frontend
+5. Click "Import"
+
+6. Frontend Settings:
+   - Name: Frontend
+   - Root Directory: frontend
+   - Build Command: npm run build
+   - Start Command: (empty - Nixpacks will handle it)
+
+7. Environment Variables:
+   ```
+   VITE_API_URL = https://<your-backend-url>.railway.app
+   ```
+
+8. Click "Deploy"
+
+══════════════════════════════════════════════════════════════════
+
+STEP 7: Get Your URLs
+----------------------
+1. Click on Frontend service
+2. Click "Generate Domain" or "Settings" → "Domains"
+3. Copy the generated URL (e.g., https://zap-trading.up.railway.app)
+4. Update Backend's ALLOWED_ORIGINS to include this URL
+
+══════════════════════════════════════════════════════════════════
+
+STEP 8: Update Environment Variables
+-------------------------------------
+Go back to Backend service → Variables:
+
+```
+DATABASE_URL      = (auto-linked from PostgreSQL)
+REDIS_URL         = (auto-linked from Redis)
+JWT_SECRET        = your-secure-random-secret-key-here
+ALLOWED_ORIGINS   = https://zap-trading.up.railway.app,https://<backend-url>.railway.app
+```
+
+Click "Deploy" again to apply changes.
+
+══════════════════════════════════════════════════════════════════
+
+STEP 9: Test the Deployment
+-----------------------------
+1. Wait for all services to show "✓ Healthy" status
+2. Click on Frontend service URL
+3. Test registration:
+   - Open https://<your-frontend-url>.railway.app/register
+   - Register a new account
+   - Should redirect to login
+
+4. Test login:
+   - Login with your credentials
+   - Should access Dashboard
+
+══════════════════════════════════════════════════════════════════
+
+QUICK REFERENCE:
+-----------------
+📦 Repository: https://github.com/autobotela-sys/zap-trading
+🚀 Railway: https://railway.app/
+📧 Email: autobotela@gmail.com
+
+Service URLs (after deployment):
+- Backend: https://<project-id>-backend.up.railway.app
+- Frontend: https://<project-id>-frontend.up.railway.app
+- API Docs: https://<backend-url>.railway.app/docs
+
+══════════════════════════════════════════════════════════════════
+
+ENVIRONMENT VARIABLES SUMMARY:
+-------------------------------
+
+BACKEND (required):
+- DATABASE_URL = <auto-generated by Railway>
+- REDIS_URL = <auto-generated by Railway>
+- JWT_SECRET = <generate a secure secret>
+- ALLOWED_ORIGINS = <your frontend URL>
+
+FRONTEND (required):
+- VITE_API_URL = <your backend URL>
+
+══════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING:
+---------------
+
+❌ Frontend can't connect to backend:
+→ Check VITE_API_URL in frontend service
+→ Check ALLOWED_ORIGINS in backend service
+→ Make sure both URLs use HTTPS
+
+❌ Database connection failed:
+→ Verify DATABASE_URL is auto-linked
+→ Check PostgreSQL service is running
+→ Restart backend service
+
+❌ Login/Registration not working:
+→ Check backend logs for errors
+→ Verify JWT_SECRET is set
+→ Check ALLOWED_ORIGINS includes frontend URL
+
+❌ Build failed:
+→ Check the build logs
+→ Make sure railway.json exists in backend/ and frontend/
+→ Verify root directory is set correctly
+
+══════════════════════════════════════════════════════════════════
+
+✅ DEPLOYMENT CHECKLIST:
+
+- [ ] GitHub repo is up to date
+- [ ] Railway project created
+- [ ] Backend service deployed
+- [ ] PostgreSQL service added
+- [ ] Redis service added
+- [ ] Frontend service deployed
+- [ ] Environment variables configured
+- [ ] All services showing "Healthy"
+- [ ] Registration works
+- [ ] Login works
+- [ ] Dashboard loads
+- [ ] Trading page loads
+- [ ] Positions page loads
+
+══════════════════════════════════════════════════════════════════
+
+COST ESTIMATE:
+--------------
+Railway Free Tier:
+- $5 free credit/month
+- After that: ~$5-10/month for all services
+  - Backend: ~$5/month
+  - PostgreSQL: ~$5/month (can share free tier)
+  - Redis: ~$5/month (can share free tier)
+  - Frontend: ~$5/month (can share free tier)
+
+Total: ~$5-15/month depending on usage
+
+══════════════════════════════════════════════════════════════════
+
+🎉 YOUR APP WILL BE LIVE AT:
+https://zap-trading.up.railway.app
+(or your custom domain)
+
+══════════════════════════════════════════════════════════════════
+
+NEED HELP?
+----------
+Railway Documentation: https://docs.railway.app/
+Railway Discord: https://discord.gg/railway
+GitHub Issues: https://github.com/autobotela-sys/zap-trading/issues
+
+══════════════════════════════════════════════════════════════════
