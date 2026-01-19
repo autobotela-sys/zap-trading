@@ -5,17 +5,17 @@ import { useAuthStore } from '../store/authStore';
 
 const { Title, Text } = Typography;
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const navigate = useNavigate();
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { register, isLoading, error, clearError } = useAuthStore();
 
-  const onFinish = async (values: { email: string; password: string }) => {
+  const onFinish = async (values: { email: string; password: string; full_name: string }) => {
     try {
-      await login(values.email, values.password);
-      message.success('Login successful!');
-      navigate('/');
-    } catch (err) {
-      message.error(error || 'Login failed');
+      await register(values.email, values.password, values.full_name);
+      message.success('Registration successful! Please login.');
+      navigate('/login');
+    } catch (err: any) {
+      message.error(error || 'Registration failed');
     }
   };
 
@@ -39,13 +39,26 @@ export default function LoginPage() {
           <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
             Zap Trading
           </Title>
-          <Text type="secondary">Multi-Account Zerodha Platform</Text>
+          <Text type="secondary">Create your account</Text>
         </div>
 
-        <Form name="login" onFinish={onFinish} size="large">
+        <Form name="register" onFinish={onFinish} size="large">
+          <Form.Item
+            name="full_name"
+            rules={[{ required: true, message: 'Please input your full name!' }]}
+          >
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Full Name"
+            />
+          </Form.Item>
+
           <Form.Item
             name="email"
-            rules={[{ required: true, message: 'Please input your email!' }]}
+            rules={[
+              { required: true, message: 'Please input your email!' },
+              { type: 'email', message: 'Please enter a valid email!' }
+            ]}
           >
             <Input
               prefix={<UserOutlined />}
@@ -56,7 +69,10 @@ export default function LoginPage() {
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[
+              { required: true, message: 'Please input your password!' },
+              { min: 5, message: 'Password must be at least 5 characters!' }
+            ]}
           >
             <Input.Password prefix={<LockOutlined />} placeholder="Password" />
           </Form.Item>
@@ -69,15 +85,15 @@ export default function LoginPage() {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" block loading={isLoading}>
-              Log in
+              Register
             </Button>
           </Form.Item>
         </Form>
 
         <div style={{ textAlign: 'center' }}>
-          <Text type="secondary">Don't have an account?</Text>
-          <Link to="/register" style={{ marginLeft: 8 }}>
-            Register
+          <Text type="secondary">Already have an account?</Text>
+          <Link to="/login" style={{ marginLeft: 8 }}>
+            Login
           </Link>
         </div>
       </Card>

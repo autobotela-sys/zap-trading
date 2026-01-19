@@ -35,8 +35,8 @@ class ZerodhaAccount(Base):
     nickname = Column(String, nullable=False)
     api_key = Column(String, nullable=False)
     api_secret_enc = Column(String, nullable=False)  # Encrypted
-    user_id = Column(String)  # Zerodha user ID (encrypted)
-    password_enc = Column(String)  # Zerodha password (encrypted)
+    zerodha_user_id_enc = Column(String)  # Zerodha user ID (encrypted)
+    zerodha_password_enc = Column(String)  # Zerodha password (encrypted)
     request_token = Column(String)
     access_token = Column(String)  # Encrypted
     public_token = Column(String)

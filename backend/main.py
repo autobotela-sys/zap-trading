@@ -126,7 +126,7 @@ async def login(login_data: UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
     # Create access token
-    access_token = create_access_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
     return Token(access_token=access_token, user=user)
 
 @app.get("/api/auth/me", response_model=UserResponse)
@@ -179,8 +179,8 @@ async def create_account(
         nickname=account_data.nickname,
         api_key=account_data.api_key,
         api_secret_enc=encrypt_data(account_data.api_secret),
-        user_id_enc=encrypt_data(account_data.zerodha_user_id) if account_data.zerodha_user_id else None,
-        password_enc=encrypt_data(account_data.zerodha_password) if account_data.zerodha_password else None
+        zerodha_user_id_enc=encrypt_data(account_data.zerodha_user_id) if account_data.zerodha_user_id else None,
+        zerodha_password_enc=encrypt_data(account_data.zerodha_password) if account_data.zerodha_password else None
     )
     db.add(new_account)
     db.commit()

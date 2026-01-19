@@ -41,25 +41,25 @@ export default api;
 // API endpoints
 export const authAPI = {
   register: (data: { email: string; password: string; full_name?: string }) =>
-    api.post('/auth/register', data),
+    api.post('/api/auth/register', data),
   login: (data: { email: string; password: string }) =>
-    api.post('/auth/login', data),
-  getMe: () => api.get('/auth/me'),
+    api.post('/api/auth/login', data),
+  getMe: () => api.get('/api/auth/me'),
 };
 
 export const accountsAPI = {
-  getAccounts: () => api.get('/accounts'),
+  getAccounts: () => api.get('/api/accounts'),
   createAccount: (data: {
     nickname: string;
     api_key: string;
     api_secret: string;
     zerodha_user_id?: string;
     zerodha_password?: string;
-  }) => api.post('/accounts', data),
-  deleteAccount: (id: number) => api.delete(`/accounts/${id}`),
-  requestToken: (id: number) => api.post(`/accounts/${id}/request-token`),
+  }) => api.post('/api/accounts', data),
+  deleteAccount: (id: number) => api.delete(`/api/accounts/${id}`),
+  requestToken: (id: number) => api.post(`/api/accounts/${id}/request-token`),
   setToken: (data: { account_id: number; request_token: string }) =>
-    api.post('/accounts/set-token', data),
+    api.post('/api/accounts/set-token', data),
 };
 
 export const ordersAPI = {
@@ -75,9 +75,9 @@ export const ordersAPI = {
     order_type: string;
     price?: number;
     amo: boolean;
-  }) => api.post('/orders/place', data),
+  }) => api.post('/api/orders/place', data),
 };
 
 export const positionsAPI = {
-  getPositions: () => api.get('/positions'),
+  getPositions: () => api.get('/api/positions'),
 };

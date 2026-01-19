@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider, theme } from 'antd';
 import { useAuthStore } from './store/authStore';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import TradingPage from './pages/TradingPage';
 import PositionsPage from './pages/PositionsPage';
@@ -25,6 +26,10 @@ function App() {
           <Route
             path="/login"
             element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/register"
+            element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/" />}
           />
           <Route
             path="/"

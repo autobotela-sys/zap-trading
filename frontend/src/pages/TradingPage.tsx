@@ -12,6 +12,7 @@ import {
   Tag,
   Row,
   Col,
+  Modal,
 } from 'antd';
 import { accountsAPI, ordersAPI } from '../services/api';
 
@@ -305,6 +306,3 @@ export default function TradingPage() {
     </Row>
   );
 }
-
-// Add Modal import
-import { Modal } from 'antd';
